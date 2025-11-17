@@ -1,6 +1,6 @@
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   Tristan Parmerlee / COMP 272-002
  *
  *   This java file contains the problem solutions for the methods selectionSort,
  *   mergeSortDivisibleByKFirst, asteroidsDestroyed, and numRescueCanoes methods.
@@ -37,10 +37,19 @@ public class ProblemSolutions {
         int n = values.length;
 
         for (int i = 0; i < n - 1; i++) {
+            int swap_indx = i;
 
-            // YOU CODE GOES HERE -- COMPLETE THE INNER LOOP OF THIS
-            // "SELECTION SORT" ALGORITHM.
-            // DO NOT FORGET TO ADD YOUR NAME / SECTION ABOVE
+            for (int j = i+1; j < n; j++){
+                if (values[j] < values[swap_indx] && ascending){
+                    swap_indx = j;
+                } else if(values[j] > values[swap_indx] && !ascending){
+                    swap_indx = j;
+                }
+            }
+
+            int temp = values[i];
+            values[i] = values[swap_indx];
+            values[swap_indx] = temp;
 
         }
 
@@ -92,15 +101,58 @@ public class ProblemSolutions {
 
     private void mergeDivisbleByKFirst(int arr[], int k, int left, int mid, int right)
     {
-        // YOUR CODE GOES HERE, THIS METHOD IS NO MORE THAN THE STANDARD MERGE PORTION
-        // OF A MERGESORT, EXCEPT THE NUMBERS DIVISIBLE BY K MUST GO FIRST WITHIN THE
-        // SEQUENCE PER THE DISCUSSION IN THE PROLOGUE ABOVE.
-        //
-        // NOTE: YOU CAN PROGRAM THIS WITH A SPACE COMPLEXITY OF O(1) OR O(N LOG N).
-        // AGAIN, THIS IS REFERRING TO SPACE COMPLEXITY. O(1) IS IN-PLACE, O(N LOG N)
-        // ALLOCATES AUXILIARY DATA STRUCTURES (TEMPORARY ARRAYS). IT WILL BE EASIER
-        // TO CODE WITH A SPACE COMPLEXITY OF O(N LOG N), WHICH IS FINE FOR PURPOSES
-        // OF THIS PROGRAMMING EXERCISES.
+
+        // find size of subarrays
+        int leftArrSize = mid-left+1;
+        int rightArrSize = right-mid;
+
+        // initialize subarrays
+        int[] leftArr = new int[leftArrSize];
+        int[] rightArr = new int[rightArrSize];
+
+        for (int i = 0; i < leftArrSize; i++){
+            leftArr[i] = arr[left + i];
+        }
+        for (int j = 0; j < rightArrSize; j++){
+            rightArr[j] = arr[mid + 1 + j];
+        }
+
+        // merge two subarrays
+        int a = 0, b = 0, c = left;
+        
+        while (a < leftArrSize && b < rightArrSize){
+            // left is divisible by k
+            if (leftArr[a] % k == 0){
+                arr[c] = leftArr[a];
+                a++;
+            // right is divisible by k
+            } else if (rightArr[b] % k == 0){
+                arr[c] = rightArr[b];
+                b++;
+            // neither divisible
+            } else{
+                if (leftArr[a] <= rightArr[b]){
+                    arr[c] = leftArr[a];
+                    a++;
+                } else{
+                    arr[c] = rightArr[b];
+                    b++;
+                }
+            }
+            c++;
+        }
+
+        // add remaining elements
+        while (a < leftArrSize) {
+            arr[c] = leftArr[a];
+            a++;
+            c++;
+        }
+        while (b < rightArrSize) {
+            arr[c] = rightArr[b];
+            b++;
+            c++;
+        }
 
         return;
 
@@ -154,9 +206,16 @@ public class ProblemSolutions {
 
     public static boolean asteroidsDestroyed(int mass, int[] asteroids) {
 
-        // YOUR CODE GOES HERE, CONSIDER USING ARRAYS.SORT()
+        Arrays.sort(asteroids);
+        for (int a_mass : asteroids){
+            if (mass >= a_mass){
+                mass += a_mass;
+            } else{
+                return false;
+            }
+        }
 
-        return false;
+        return true;
 
     }
 
@@ -192,9 +251,17 @@ public class ProblemSolutions {
 
     public static int numRescueSleds(int[] people, int limit) {
 
-        // YOUR CODE GOES HERE, CONSIDER USING ARRAYS.SORT
+        Arrays.sort(people);
+        int num_sleds = 0;
+        for (int i = 0; i < people.length; i=i+2){
+            if (people[i] + people[i+1] <= limit){
+                num_sleds++;
+            } else{
+                num_sleds=num_sleds+2;
+            }
+        }
 
-        return -1;
+        return num_sleds;
 
     }
 
